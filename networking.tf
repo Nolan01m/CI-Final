@@ -1,0 +1,59 @@
+resource "aws_internet_gateway" "Gateway" {
+  vpc_id = aws_vpc.nhlabs.id
+}
+resource "aws_route_table" "Routing" {
+  vpc_id = aws_vpc.nhlabs.id
+  route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = aws_internet_gateway.Gateway.id
+  }
+}
+resource "aws_route_table_association" "Routing" {
+  subnet_id      = aws_subnet.subnet.id
+  route_table_id = aws_route_table.Routing.id
+}
+resource "aws_subnet" "subnet" {
+  vpc_id            = aws_vpc.nhlabs.id
+  cidr_block        = "10.0.0.0/29"
+  availability_zone = "us-east-1a"
+
+  tags = {
+    Name = "Instance_Subnet"
+  }
+}
+resource "aws_network_interface" "Splunk_Interface" {
+  subnet_id       = aws_subnet.subnet.id
+  private_ips     = ["10.0.0.5"]
+  security_groups = [aws_security_group.default.id]
+}
+#added Website
+resource "aws_eip" "External_IP" {
+  instance                  = aws_instance.Splunk_Instance.id
+  vpc                       = true
+  associate_with_private_ip = "10.0.0.5"
+  depends_on                = [aws_internet_gateway.Gateway]
+}
+//# Creating a Security Group
+resource "aws_security_group" "default" {
+  name        = "allow_http(s)"
+  description = "Allow http(s) inbound traffic"
+  vpc_id      = aws_vpc.nhlabs.id
+
+  ingress {
+    protocol    = -1
+    from_port   = 0
+    to_port     = 0
+    cidr_blocks = ["0.0.0.0/0"]
+    self        = true
+  }
+  egress {
+    protocol    = -1
+    from_port   = 0
+    to_port     = 0
+    cidr_blocks = ["0.0.0.0/0"]
+    self        = true
+  }
+  tags = {
+    Name = "Allow_Everything"
+  }
+}
