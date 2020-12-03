@@ -14,7 +14,7 @@ resource "aws_route_table_association" "Routing" {
 }
 resource "aws_subnet" "subnet" {
   vpc_id            = aws_vpc.nhlabs.id
-  cidr_block        = "10.0.0.0/29"
+  cidr_block        = "10.0.0.0/28"
   availability_zone = "us-east-1a"
 
   tags = {
