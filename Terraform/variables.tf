@@ -1,3 +1,4 @@
+/*
 variable "profile" {
   default = "terraform_iam_user"
 }
@@ -38,4 +39,4 @@ variable "amis" {
 
 variable "ami" {
   default = "ami-0c5199d385b432989"
-}
+}*/
