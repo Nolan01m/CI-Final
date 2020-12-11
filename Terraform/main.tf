@@ -22,6 +22,7 @@ resource "aws_instance" "Splunk_Instance" {
 
   ami           = "ami-0b0944867dcc4cf5a"
   instance_type = "t2.micro"
+  key_name = "NolanLT"
 
   network_interface {
     network_interface_id = aws_network_interface.Splunk_Interface.id
