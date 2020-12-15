@@ -32,8 +32,12 @@ resource "aws_instance" "Splunk_Instance" {
     network_interface_id = aws_network_interface.Splunk_Interface.id
     device_index         = 0
   }
+  connection {
+    private_key = file(var.private_key)
+    user        = var.ansible_user
+  }
   tags = {
-    Name = "Splunk_Instance"
+    Name     = "Splunk-${count.index +1 }"
   }
 }
 resource "aws_instance" "Cartography_Instance" {
@@ -47,7 +51,21 @@ resource "aws_instance" "Cartography_Instance" {
     network_interface_id = aws_network_interface.Cartography_Interface.id
     device_index         = 0
   }
+  /*
+  provisioner "local-exec" {
+    command = <<EOT
+      sleep 30;
+          >Cartography.ini;
+          echo "[Cartography]" | tee -a Cartography.ini;
+          echo "${aws_instance.Cartography_Instance.0.public_ip} ansible_user=${var.ansible_user} ansible_ssh_private_key_file=${var.private_key}" | tee -a Cartography.ini;
+      export ANSIBLE_HOST_KEY_CHECKING=False;
+          ansible-playbook -u var.ansible_user --private-key var.private_key -i Cartography.ini ../Playbooks/install_Cartography.yaml
+    EOT
+  }
+*/
   tags = {
-    Name = "Cartography_Instance"
+    Name     = "Cartography-${count.index +1 }"
   }
 }
+
+  

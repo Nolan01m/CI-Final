@@ -26,7 +26,7 @@ resource "aws_network_interface" "Splunk_Interface" {
 resource "aws_network_interface" "Cartography_Interface" {
   subnet_id       = aws_subnet.subnet.id
   private_ips     = ["10.0.0.4"]
-  security_groups = [aws_security_group.SG2.id]
+  security_groups = [aws_security_group.SG1.id]
 }
 //#External IPs
 resource "aws_eip" "External_IP" {
