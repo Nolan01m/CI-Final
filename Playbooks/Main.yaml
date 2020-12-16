@@ -1,0 +1,16 @@
+- include: Splunk.yaml
+
+- name: Standard_Test
+  hosts: all
+
+  tasks:
+  
+  - name: Upgrade all packages
+    yum:
+      name: '*'
+      state: latest
+    
+  - name: Install Amazon JDK
+    become: yes
+    shell: "sudo rpm -i https://corretto.aws/downloads/latest/amazon-corretto-11-x64-linux-jdk.rpm"
+  

@@ -24,7 +24,7 @@ resource "aws_vpc" "nhlabs" {
 resource "aws_instance" "Splunk_Instance" {
   count = var.instance_count
 
-  ami           = "ami-0b0944867dcc4cf5a"
+  ami           = "ami-059629ba8eb9b183a"
   instance_type = var.instance
   key_name      = "My_Key"
 
@@ -51,21 +51,64 @@ resource "aws_instance" "Cartography_Instance" {
     network_interface_id = aws_network_interface.Cartography_Interface.id
     device_index         = 0
   }
-  /*
-  provisioner "local-exec" {
-    command = <<EOT
-      sleep 30;
-          >Cartography.ini;
-          echo "[Cartography]" | tee -a Cartography.ini;
-          echo "${aws_instance.Cartography_Instance.0.public_ip} ansible_user=${var.ansible_user} ansible_ssh_private_key_file=${var.private_key}" | tee -a Cartography.ini;
-      export ANSIBLE_HOST_KEY_CHECKING=False;
-          ansible-playbook -u var.ansible_user --private-key var.private_key -i Cartography.ini ../Playbooks/install_Cartography.yaml
-    EOT
+/*
+  provisioner "local_exec" {
+  command = "echo export ANSIBLE_HOST_KEY_CHECKING=False; && ansible-playbook -u var.ansible_user --private-key var.private_key -i ../inventory.ini ../Playbooks/install_Cartography.yaml"
   }
 */
   tags = {
     Name = "Cartography-${count.index + 1}"
   }
 }
+//##Backups##\\
+resource "aws_backup_vault" "backup_splunk" {
+  name        = "backup_splunk"
+}
+resource "aws_backup_plan" "backup_splunk" {
+  name = "backup_splunk"
 
-  
+  rule {
+    rule_name         = "backup_splunk"
+    target_vault_name = "backup_splunk"
+    schedule          = "cron(0 12 * * ? *)"
+  }
+}
+resource "aws_iam_role" "backup" {
+  name               = "backup"
+  assume_role_policy = <<POLICY
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": ["sts:AssumeRole"],
+      "Effect": "allow",
+      "Principal": {
+        "Service": ["backup.amazonaws.com"]
+      }
+    }
+  ]
+}
+POLICY
+}
+resource "aws_backup_selection" "backups" {
+  iam_role_arn = aws_iam_role.backup.arn
+  name         = "backup_selection"
+  plan_id      = aws_backup_plan.backup_splunk.id
+
+  resources = [
+    aws_instance.Splunk_Instance.0.arn
+  ]
+}
+resource "aws_backup_region_settings" "backups" {
+  resource_type_opt_in_preference = {
+    "DynamoDB"        = false
+    "Aurora"          = false
+    "EBS"             = true
+    "EC2"             = true
+    "EFS"             = false
+    "FSx"             = false
+    "RDS"             = false
+    "Storage Gateway" = false
+  }
+}
+
