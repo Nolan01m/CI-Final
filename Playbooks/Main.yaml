@@ -1,4 +1,4 @@
-- include: Splunk.yaml
+- include: splunk.yaml
 
 - name: Standard_Test
   hosts: all

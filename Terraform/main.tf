@@ -24,7 +24,7 @@ resource "aws_vpc" "nhlabs" {
 resource "aws_instance" "Splunk_Instance" {
   count = var.instance_count
 
-  ami           = "ami-059629ba8eb9b183a"
+  ami           = "ami-0c003fe096c2c12e1"
   instance_type = var.instance
   key_name      = "My_Key"
 
