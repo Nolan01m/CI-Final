@@ -26,7 +26,7 @@ resource "aws_instance" "Splunk_Instance" {
 
   ami           = "ami-0b0944867dcc4cf5a"
   instance_type = var.instance
-  key_name = "My_Key"
+  key_name      = "My_Key"
 
   network_interface {
     network_interface_id = aws_network_interface.Splunk_Interface.id
@@ -37,7 +37,7 @@ resource "aws_instance" "Splunk_Instance" {
     user        = var.ansible_user
   }
   tags = {
-    Name     = "Splunk-${count.index +1 }"
+    Name = "Splunk-${count.index + 1}"
   }
 }
 resource "aws_instance" "Cartography_Instance" {
@@ -45,7 +45,7 @@ resource "aws_instance" "Cartography_Instance" {
 
   ami           = "ami-0128839b21d19300e"
   instance_type = var.instance
-  key_name = "My_Key"
+  key_name      = "My_Key"
 
   network_interface {
     network_interface_id = aws_network_interface.Cartography_Interface.id
@@ -64,7 +64,7 @@ resource "aws_instance" "Cartography_Instance" {
   }
 */
   tags = {
-    Name     = "Cartography-${count.index +1 }"
+    Name = "Cartography-${count.index + 1}"
   }
 }
 

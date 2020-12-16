@@ -21,7 +21,7 @@ resource "aws_route_table_association" "Routing" {
 resource "aws_network_interface" "Splunk_Interface" {
   subnet_id       = aws_subnet.subnet.id
   private_ips     = ["10.0.0.5"]
-  security_groups = [aws_security_group.SG1.id,aws_security_group.SG2.id]
+  security_groups = [aws_security_group.SG1.id, aws_security_group.SG2.id]
 }
 resource "aws_network_interface" "Cartography_Interface" {
   subnet_id       = aws_subnet.subnet.id
@@ -31,7 +31,7 @@ resource "aws_network_interface" "Cartography_Interface" {
 //#External IPs
 resource "aws_eip" "External_IP" {
   instance                  = aws_instance.Splunk_Instance.0.id
-  vpc                       = true 
+  vpc                       = true
   associate_with_private_ip = "10.0.0.5"
   depends_on                = [aws_internet_gateway.Gateway]
 }
@@ -43,8 +43,8 @@ resource "aws_eip" "External_IP2" {
 }
 //# Creating a Security Group
 resource "aws_security_group" "SG1" {
-  name        = "Splunk Web"
-  vpc_id      = aws_vpc.nhlabs.id
+  name   = "Splunk Web"
+  vpc_id = aws_vpc.nhlabs.id
 
   ingress {
     protocol    = -1
@@ -62,8 +62,8 @@ resource "aws_security_group" "SG1" {
   }
 }
 resource "aws_security_group" "SG2" {
-  name        = "Allow SSH"
-  vpc_id      = aws_vpc.nhlabs.id
+  name   = "Allow SSH"
+  vpc_id = aws_vpc.nhlabs.id
 
   ingress {
     protocol    = "tcp"
