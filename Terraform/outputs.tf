@@ -22,6 +22,5 @@ resource "local_file" "inventory" {
 #dynamic Ansible Play
 output "Ansible_Run" {
   value = "ansible-playbook -u ${var.ansible_user} --private-key ${var.private_key} -i inventory.ini ../Playbooks/Main.yaml"
-  
 }
   

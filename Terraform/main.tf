@@ -21,12 +21,38 @@ resource "aws_vpc" "nhlabs" {
 }
 //##Instances##\\
 //# Create an EC2 instance
+
+resource "aws_volume_attachment" "ebs_att" {
+  device_name = "/dev/sdf"
+  volume_id   = aws_ebs_volume.Splunk_EBS.id
+  instance_id = aws_instance.Splunk_Instance.0.id
+}
+
+resource "aws_ebs_volume" "Splunk_EBS" {
+  availability_zone = "us-east-1a"
+  size              = 20
+  snapshot_id = "ami-0c003fe096c2c12e1"
+
+  lifecycle {
+    prevent_destroy = true
+    ignore_changes = [arn]
+    
+  }
+
+  tags = {
+    Name = "Splunk_EBS"
+  }
+}
+
 resource "aws_instance" "Splunk_Instance" {
   count = var.instance_count
+
 
   ami           = "ami-0c003fe096c2c12e1"
   instance_type = var.instance
   key_name      = "My_Key"
+
+
 
   network_interface {
     network_interface_id = aws_network_interface.Splunk_Interface.id
@@ -40,6 +66,7 @@ resource "aws_instance" "Splunk_Instance" {
     Name = "Splunk-${count.index + 1}"
   }
 }
+
 resource "aws_instance" "Cartography_Instance" {
   count = var.instance_count
 
@@ -51,11 +78,11 @@ resource "aws_instance" "Cartography_Instance" {
     network_interface_id = aws_network_interface.Cartography_Interface.id
     device_index         = 0
   }
-/*
+
   provisioner "local_exec" {
   command = "echo export ANSIBLE_HOST_KEY_CHECKING=False; && ansible-playbook -u var.ansible_user --private-key var.private_key -i ../inventory.ini ../Playbooks/install_Cartography.yaml"
   }
-*/
+
   tags = {
     Name = "Cartography-${count.index + 1}"
   }
@@ -111,4 +138,4 @@ resource "aws_backup_region_settings" "backups" {
     "Storage Gateway" = false
   }
 }
-
+//##CloudTrail##\\
