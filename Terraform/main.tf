@@ -21,7 +21,7 @@ resource "aws_vpc" "nhlabs" {
 }
 //##Instances##\\
 //# Create an EC2 instance
-
+/*
 resource "aws_volume_attachment" "ebs_att" {
   device_name = "/dev/sdf"
   volume_id   = aws_ebs_volume.Splunk_EBS.id
@@ -31,7 +31,7 @@ resource "aws_volume_attachment" "ebs_att" {
 resource "aws_ebs_volume" "Splunk_EBS" {
   availability_zone = "us-east-1a"
   size              = 20
-  snapshot_id       = "ami-0c003fe096c2c12e1"
+  snapshot_id       = "n/a"
 
   lifecycle {
     prevent_destroy = true
@@ -43,7 +43,7 @@ resource "aws_ebs_volume" "Splunk_EBS" {
     Name = "Splunk_EBS"
   }
 }
-
+*/
 resource "aws_instance" "Splunk_Instance" {
   count = var.instance_count
 
