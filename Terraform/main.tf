@@ -31,12 +31,12 @@ resource "aws_volume_attachment" "ebs_att" {
 resource "aws_ebs_volume" "Splunk_EBS" {
   availability_zone = "us-east-1a"
   size              = 20
-  snapshot_id = "ami-0c003fe096c2c12e1"
+  snapshot_id       = "ami-0c003fe096c2c12e1"
 
   lifecycle {
     prevent_destroy = true
-    ignore_changes = [arn]
-    
+    ignore_changes  = [arn]
+
   }
 
   tags = {
@@ -78,18 +78,13 @@ resource "aws_instance" "Cartography_Instance" {
     network_interface_id = aws_network_interface.Cartography_Interface.id
     device_index         = 0
   }
-
-  provisioner "local_exec" {
-  command = "echo export ANSIBLE_HOST_KEY_CHECKING=False; && ansible-playbook -u var.ansible_user --private-key var.private_key -i ../inventory.ini ../Playbooks/install_Cartography.yaml"
-  }
-
   tags = {
     Name = "Cartography-${count.index + 1}"
   }
 }
 //##Backups##\\
 resource "aws_backup_vault" "backup_splunk" {
-  name        = "backup_splunk"
+  name = "backup_splunk"
 }
 resource "aws_backup_plan" "backup_splunk" {
   name = "backup_splunk"

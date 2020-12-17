@@ -1,7 +1,7 @@
 output "url-Splunk" {
   value = "http://${aws_instance.Splunk_Instance.0.public_ip}:8000"
 }
-output "Splunk-Creds"{
+output "Splunk-Creds" {
   value = "User:admin  Password: SPLUNK-${aws_instance.Splunk_Instance.0.id}"
 }
 output "url-cartography" {
@@ -9,8 +9,8 @@ output "url-cartography" {
 }
 #Dyanmic Inventory
 resource "local_file" "inventory" {
-    filename = "inventory.ini"
-    content     = <<EOF
+  filename = "inventory.ini"
+  content  = <<EOF
     [Splunk] 
     ${aws_instance.Splunk_Instance.0.public_ip}
 
@@ -18,9 +18,9 @@ resource "local_file" "inventory" {
     ${aws_instance.Cartography_Instance.0.public_ip}
 
     EOF
-  }
+}
 #dynamic Ansible Play
 output "Ansible_Run" {
-  value = "ansible-playbook -u ${var.ansible_user} --private-key ${var.private_key} -i inventory.ini ../Playbooks/Main.yaml"
+  value = " echo export ANSIBLE_HOST_KEY_CHECKING=False && ansible-playbook -u ${var.ansible_user} --private-key ${var.private_key} -i inventory.ini ../Playbooks/Main.yaml"
 }
   

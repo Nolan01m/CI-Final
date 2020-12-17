@@ -26,6 +26,6 @@ variable "ansible_user" {
   default = "ec2-user"
 }
 
-variable "ansible_play"{
+variable "ansible_play" {
   default = "null"
 }
