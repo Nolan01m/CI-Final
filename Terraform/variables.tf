@@ -29,3 +29,12 @@ variable "ansible_user" {
 variable "ansible_play" {
   default = "null"
 }
+
+variable "hec_token" {
+  default = "dbf77230-1434-4ce4-9696-4beb68e9aaa1"
+  
+}
+variable "SplunkPassword" {
+  default = "SPLUNK-i-089e40aa39d440950"
+  
+}

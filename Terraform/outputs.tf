@@ -21,6 +21,6 @@ resource "local_file" "inventory" {
 }
 #dynamic Ansible Play
 output "Ansible_Run" {
-  value = " echo export ANSIBLE_HOST_KEY_CHECKING=False && ansible-playbook -u ${var.ansible_user} --private-key ${var.private_key} -i inventory.ini ../Playbooks/Main.yaml"
+  value = "export ANSIBLE_HOST_KEY_CHECKING=False && ansible-playbook -u ${var.ansible_user} --private-key ${var.private_key} -i inventory.ini ../Playbooks/Main.yaml"
 }
   

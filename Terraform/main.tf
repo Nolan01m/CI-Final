@@ -135,3 +135,18 @@ resource "aws_backup_region_settings" "backups" {
   }
 }
 //##CloudTrail##\\
+data "template_file" "trumpet" {
+  template = file("../Scripts/trumpet.json")
+  vars = {
+    HEC_TOKEN = var.hec_token
+  }
+}
+resource "aws_cloudformation_stack" "trumpet" {
+  name = "trumpet-stack"
+  template_body = data.template_file.trumpet.rendered
+  capabilities = ["CAPABILITY_IAM", "CAPABILITY_NAMED_IAM", "CAPABILITY_AUTO_EXPAND"]
+  parameters = {
+    "SplunkPassword" = "SPLUNK-i-089e40aa39d440950",
+    "SplunkUsername" = "admin"
+  }
+}
