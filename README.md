@@ -1,3 +1,5 @@
+[![Gitpod ready-to-code](https://img.shields.io/badge/Gitpod-ready--to--code-blue?logo=gitpod)](https://gitpod.io/#https://github.com/Nolan01m/CI-Final)
+
 # CI-Final
 ![Terraform](https://github.com/Nolan01m/CI-Final/workflows/Terraform/badge.svg?event=deployment_status)
 
